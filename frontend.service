@@ -1,0 +1,13 @@
+[Unit]
+Description=Frontend Server (Resume)
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+ExecStart=/usr/bin/frontend
+User=frontend
+
+[Install]
+WantedBy=multi-user.target

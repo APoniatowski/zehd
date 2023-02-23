@@ -1,0 +1,16 @@
+Initial push changelog:
+- HTML and goHTML template parsing (layout+template and individual files, without a layout)
+- Org(-mode) file conversion and parsing
+- MD (Markdown) file conversion and parsing
+- Caching implemented to avoid reading files from disk, every time the page is called, and avoid 
+  server/service restarts
+- Paths are automatically created, no extra steps needed (eg. example.com/path/to/page)
+- Basic kubernetes health and readiness checks are implemented
+- Data collection implemented (collected via HEADER, this can be spoofed, unfortunately)
+- Data collected, forwards data to backend, which is setup, via environment variable: 
+  BACKEND=http://YourBackend.example.com:8080
+    extra notes: 
+     * add port number and "http://" in your .env file (an example is included), or exported one way or another
+     * an example service file has been included. There will be an official one, but this is one I currently use (just edited to suite my environment)
+     * having the backend node, is not required to function
+     
