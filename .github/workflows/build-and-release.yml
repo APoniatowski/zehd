@@ -21,7 +21,7 @@ jobs:
           mv ./frontend-microservice ./zehd
           cd ../..
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-          echo "CHANGELOG='$(cat CHANGELOG)'" >> $GITHUB_ENV
+          echo "CHANGELOG='$(cat CHANGELOG | tr '\n' ',')'" >> $GITHUB_ENV
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
