@@ -15,4 +15,4 @@
 
      - add port number and "http://" in your .env file (an example is included), or exported one way or another
      - an example service file has been included. There will be an official one, but this is one I currently use (just edited to suite my environment)
-     - having the backend node, is not required to function
+     - having the backend node, is not required to function.
