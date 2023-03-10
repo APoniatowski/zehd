@@ -19,12 +19,13 @@ jobs:
           cd cmd/frontend-microservice
           go build ./...
           mv ./frontend-microservice ./zehd
+          cd ../..
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           artifacts: 'zehd'
-          tag: $(cat VERSION)
+          tag: v$(cat VERSION)
           name: ZEHD $(cat VERSION)
           body: $(cat CHANGELOG)
