@@ -26,6 +26,5 @@ jobs:
         with:
           artifacts: 'zehd'
           tag: v$(cat VERSION)
-          release_name: ZEHD $(cat VERSION)
+          name: ZEHD $(cat VERSION)
           body: $(cat CHANGELOG)
-
