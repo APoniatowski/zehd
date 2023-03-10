@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  VERSION: 0.0.0
+  CHANGELOG: NA
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,12 +24,14 @@ jobs:
           go build ./...
           mv ./frontend-microservice ./zehd
           cd ../..
+          echo "v$(cat VERSION)" > ${{ env.VERSION }}
+          echo "$(cat CHANGELOG)" > ${{ env.CHANGELOG }}
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           artifacts: 'zehd'
-          tag: v$(cat VERSION)
-          name: ZEHD $(cat VERSION)
-          body: $(cat CHANGELOG)
+          tag: ${{ env.VERSION }}
+          name: ZEHD ${{ env.VERSION }}
+          body: ${{ env.CHANGELOG }}
