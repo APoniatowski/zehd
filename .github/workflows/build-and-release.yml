@@ -14,13 +14,19 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.20'
+          
       - name: Build
         run: |
           cd cmd/frontend-microservice
           go build ./...
           mv ./frontend-microservice ./zehd
           cd ../..
+          
+      - name: Set version and changelog
+        run: |
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "CHANGELOG=`$(cat CHANGELOG)`" >> $GITHUB_ENV
+          
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
@@ -29,4 +35,4 @@ jobs:
           artifacts: 'zehd'
           tag: v${{ env.VERSION }}
           name: ZEHD v${{ env.VERSION }}
-          body: CHANGELOG
+          body: ${{ env.CHANGELOG }}
