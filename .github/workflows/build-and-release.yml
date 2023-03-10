@@ -17,7 +17,8 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-          echo "CHANGELOG=$(cat CHANGELOG)" >> $GITHUB_ENV   
+          echo "CHANGELOG='$(cat CHANGELOG)'" >> $GITHUB_ENV
+        shell: bash
       - name: Build
         run: |
           cd cmd/frontend-microservice
