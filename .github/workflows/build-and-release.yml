@@ -21,15 +21,13 @@ jobs:
           mv ./frontend-microservice ./zehd
           cd ../..
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-          echo "CHANGELOG='$(cat CHANGELOG | tr '\n' ',')'" >> $GITHUB_ENV
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          CHANGELOG: ${{ env.CHANGELOG }}
         with:
           artifacts: 'zehd'
           tag: v${{ env.VERSION }}
           name: ZEHD v${{ env.VERSION }}
           body: |
-            $(echo "${{ env.CHANGELOG }}" | tr ',' '\n' | sed 's/^/- /')
+            $(cat CHANGELOG)
