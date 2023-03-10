@@ -72,6 +72,6 @@ Adjust your frontend setup with environment variables (`PORT`,`TEMPLATEDIRECTORY
 GogoApps for not honoring my B2B contract and terminating it when on I was on sick leave, my advice would be to avoid them for anything business or employment related. 
 
 ** but...
-They have given me the time to finally finish my frontend and [[http://www.example.com][backend services]]
+They have given me the time to finally finish my frontend and [[https://github.com/APoniatowski/zehd-backend][backend services]]
 
 I am still working on a worker/agent to be able to dynamically ban IP's/hostnames/etc, in the future I will implement calls from the frontend to the backend, to check if the IP/etc has been banned or not. 
