@@ -26,8 +26,10 @@ jobs:
         uses: ncipollo/release-action@v1
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          CHANGELOG: ${{ env.CHANGELOG }}
         with:
           artifacts: 'zehd'
           tag: v${{ env.VERSION }}
-          name: ZEHD ${{ env.VERSION }}
-          body: ${{ env.CHANGELOG }}
+          name: ZEHD v${{ env.VERSION }}
+          body: |
+            $(echo "${{ env.CHANGELOG }}" | tr ',' '\n' | sed 's/^/- /')
