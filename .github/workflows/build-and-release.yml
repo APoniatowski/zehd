@@ -14,14 +14,16 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.20'
+      - name: Set Environment Variables
+        run: |
+          cat VERSION >> $GITHUB_ENV
+          cat CHANGELOG >> $GITHUB_ENV    
       - name: Build
         run: |
           cd cmd/frontend-microservice
           go build ./...
           mv ./frontend-microservice ./zehd
           cd ../..
-          echo ::set-env name=VERSION::$(cat VERSION)
-          echo ::set-env name=CHANGELOG::$(cat CHANGELOG)
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
