@@ -30,4 +30,4 @@ jobs:
           tag: v${{ env.VERSION }}
           name: ZEHD v${{ env.VERSION }}
           body: |
-            $(cat CHANGELOG)
+            cat CHANGELOG
