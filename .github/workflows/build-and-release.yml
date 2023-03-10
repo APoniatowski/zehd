@@ -21,11 +21,8 @@ jobs:
           go build ./...
           mv ./frontend-microservice ./zehd
           cd ../..
-          
-      - name: Set version and changelog
-        run: |
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-          echo "CHANGELOG=`$(cat CHANGELOG)`" >> $GITHUB_ENV
+          echo "VERSION=$(cat ./VERSION)" >> $GITHUB_ENV
+          echo "CHANGELOG=`$(cat ./CHANGELOG)`" >> $GITHUB_ENV
           
       - name: Create Release
         uses: ncipollo/release-action@v1
