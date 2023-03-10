@@ -16,8 +16,8 @@ jobs:
           go-version: '1.20'
       - name: Set Environment Variables
         run: |
-          echo "v$(cat VERSION)" >> $GITHUB_ENV
-          cat CHANGELOG >> $GITHUB_ENV    
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "CHANGELOG=$(cat CHANGELOG)" >> $GITHUB_ENV   
       - name: Build
         run: |
           cd cmd/frontend-microservice
@@ -30,6 +30,6 @@ jobs:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           artifacts: 'zehd'
-          tag: ${{ env.VERSION }}
+          tag: v${{ env.VERSION }}
           name: ZEHD ${{ env.VERSION }}
           body: ${{ env.CHANGELOG }}
