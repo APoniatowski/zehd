@@ -38,7 +38,7 @@ Here is an example of a simple Go template:
         <title>{{template title}}</title>
     </head>
     <body>
-        
+        {{template templatePart}}
     </body>
 </html>
 #+END_SRC
