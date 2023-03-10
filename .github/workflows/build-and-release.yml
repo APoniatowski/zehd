@@ -25,6 +25,6 @@ jobs:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           artifacts: 'zehd'
-          tag: v$(cat VERSION)
+          tag: $(cat VERSION)
           name: ZEHD $(cat VERSION)
           body: $(cat CHANGELOG)
