@@ -1,4 +1,4 @@
-# 1.1.0 changelog
-
-- Added a profiler, with a env variable check, to output how long a task has taken for a number of tasks/functions
+## [1.1.1] - 29-10-2023
+### Added
+- A profiler, with an env variable check, to output how long a task has taken for a number of tasks/functions.
 
