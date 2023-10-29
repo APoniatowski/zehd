@@ -35,6 +35,10 @@ jobs:
           name: changelog
           path: changelog.txt
           
+      - name: Set Outputs
+        id: vars
+        run: echo "::set-output name=version::$(cat ./VERSION)"
+          
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -56,8 +60,8 @@ jobs:
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          artifacts: 'zehd'
-          tag: v${{ env.VERSION }}
-          name: ZEHD v${{ env.VERSION }}
+          artifacts: 'zehd/zehd' 
+          tag: v${{ needs.build.outputs.version }}
+          name: ZEHD v${{ needs.build.outputs.version }}
           body_path: changelog.txt
           allowUpdates: true
