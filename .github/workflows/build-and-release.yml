@@ -21,7 +21,7 @@ jobs:
           go build -o zehd ./...
           cd ../../
           echo "VERSION=$(cat ./VERSION)" >> $GITHUB_ENV
-          echo "$(cat ./CHANGELOG)" > changelog.txt
+          echo "$(cat ./CHANGELOG)" > changelog.md
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: changelog
-          path: changelog.txt
+          path: changelog.md
           
       - name: Set Outputs
         id: vars
@@ -63,5 +63,5 @@ jobs:
           artifacts: 'zehd/zehd' 
           tag: v${{ needs.build.outputs.version }}
           name: ZEHD v${{ needs.build.outputs.version }}
-          body_path: changelog.txt
+          body_path: changelog.md
           allowUpdates: true
