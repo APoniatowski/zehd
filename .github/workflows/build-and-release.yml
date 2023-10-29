@@ -21,7 +21,8 @@ jobs:
           go build -o zehd ./...
           cd ../../
           echo "VERSION=$(cat ./VERSION)" >> $GITHUB_ENV
-          echo "CHANGELOG=$(cat ./CHANGELOG)" >> $GITHUB_ENV
+          CHANGELOG=$(cat ./CHANGELOG | base64)
+          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
