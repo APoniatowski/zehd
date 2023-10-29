@@ -21,14 +21,19 @@ jobs:
           go build -o zehd ./...
           cd ../../
           echo "VERSION=$(cat ./VERSION)" >> $GITHUB_ENV
-          CHANGELOG=$(cat ./CHANGELOG | base64)
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+          echo "$(cat ./CHANGELOG)" > changelog.txt
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: zehd
           path: cmd/zehd/zehd
+          
+      - name: Upload Changelog
+        uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: changelog.txt
           
   release:
     needs: build
@@ -41,12 +46,19 @@ jobs:
         with:
           name: zehd
           
+      - name: Download Changelog
+        uses: actions/download-artifact@v2
+        with:
+          name: changelog
+          
+      - name: Read Changelog
+        id: changelog
+        run: echo "CHANGELOG=$(<changelog.txt)" >> $GITHUB_ENV
+      
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          VERSION: ${{ needs.build.outputs.VERSION }}
-          CHANGELOG: ${{ needs.build.outputs.CHANGELOG }}
         with:
           artifacts: 'zehd'
           tag: v${{ env.VERSION }}
