@@ -68,6 +68,10 @@ Adjust your frontend setup with environment variables (`PORT`,`TEMPLATEDIRECTORY
 - `TEMPLATETYPE` : Specify which type of template format you'd like to use (default is gohtml). You can use any file extension you want (this was untested, of course)
 - `REFRESHCACHE` : Specify a different refresh cycle (default is 60 seconds)
 
-[[https://github.com/APoniatowski/zehd-backend][Backend service found here]]
+* Special thanks go to: 
+GogoApps for not honoring my B2B contract and terminating it when on I was on sick leave, my advice would be to avoid them for anything business or employment related. 
 
-I am still working on a worker/agent to be able to dynamically ban IP's/hostnames/etc, in the future I will implement calls from the frontend to the backend, to check if the IP/etc has been banned or not. But it is usable without a backend, or database
+** but...
+They have given me the time to finally finish my frontend and [[https://github.com/APoniatowski/zehd-backend][backend services]]
+
+I am still working on a worker/agent to be able to dynamically ban IP's/hostnames/etc, in the future I will implement calls from the frontend to the backend, to check if the IP/etc has been banned or not. 

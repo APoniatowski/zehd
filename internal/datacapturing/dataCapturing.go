@@ -11,12 +11,13 @@ import (
 
 	timeSmithy "github.com/aws/smithy-go/time"
 
-	"poniatowski-dev/internal/backendconnector"
-	"poniatowski-dev/internal/logging"
+	"zehd-frontend/internal/backendconnector"
+	"zehd-frontend/internal/logging"
 )
 
 // CollectData - Collects all data from http request, parses it and sends it to the database
 func CollectData(r *http.Request) {
+	defer logging.TrackTime("data-collector", time.Now())
 	var rD backendconnector.RequestData
 	var errHostname error
 	var waitGroup sync.WaitGroup

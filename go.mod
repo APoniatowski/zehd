@@ -1,6 +1,6 @@
-module poniatowski-dev
+module zehd-frontend
 
-go 1.20
+go 1.21
 
 require (
 	github.com/aws/smithy-go v1.12.1

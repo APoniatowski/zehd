@@ -10,8 +10,9 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"time"
 
-	"poniatowski-dev/internal/logging"
+	"zehd-frontend/internal/logging"
 )
 
 type DatabaseExistsInfo struct {
@@ -37,6 +38,7 @@ type RequestData struct {
 
 // DatabaseInit - Initialize the database with tables, if the check returns false
 func DatabaseInit() error {
+	defer logging.TrackTime("db-init", time.Now())
 	var databaseInfo DatabaseExistsInfo
 	databaseInfo.DatabaseExists()
 	if databaseInfo.Tables == "exists" {
@@ -68,6 +70,7 @@ func DatabaseInit() error {
 
 // DatabaseExists - Check if database exists and has existing tables
 func (dbInfo *DatabaseExistsInfo) DatabaseExists() {
+	defer logging.TrackTime("db-exists", time.Now())
 	backendURL := os.Getenv("BACKEND")
 	if len(backendURL) == 0 {
 		dbInfo.Connection = "no env var"
@@ -95,6 +98,7 @@ func (dbInfo *DatabaseExistsInfo) DatabaseExists() {
 
 func (dbInfo *DatabaseExistsInfo) DatabaseCreate() {
 	// create post request
+	defer logging.TrackTime("create-db", time.Now())
 	backendURL := os.Getenv("BACKEND")
 	if len(backendURL) == 0 {
 		dbInfo.Connection = "no env var"
@@ -117,6 +121,7 @@ func (dbInfo *DatabaseExistsInfo) DatabaseCreate() {
 
 // DBConnector  Function to insert request data into the database
 func (rD *RequestData) DBConnector(waitGroup *sync.WaitGroup) {
+	defer logging.TrackTime("db-connector", time.Now())
 	waitGroup.Add(1)
 	jsonToBackend, errMarshal := json.Marshal(rD)
 	if errMarshal != nil {

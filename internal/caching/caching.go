@@ -8,9 +8,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
-	"poniatowski-dev/internal"
-	"poniatowski-dev/internal/logging"
+	"zehd-frontend/internal"
+	"zehd-frontend/internal/logging"
 )
 
 type Pages struct {
@@ -18,6 +19,7 @@ type Pages struct {
 }
 
 func (pages *Pages) CachePages() error {
+	defer logging.TrackTime("cacher", time.Now())
 	errchdir := os.Chdir(internal.TemplatesDir + internal.TemplateType)
 	if errchdir != nil {
 		logging.LogIt("cachepages", "error", "chdir returned an error: "+fmt.Sprintln(errchdir))
@@ -62,6 +64,7 @@ func (pages *Pages) CachePages() error {
 }
 
 func templatebuilder(page, filetype string) (*template.Template, error) {
+	defer logging.TrackTime("template-builder", time.Now())
 	if filetype == "invalid" {
 		return nil, errors.New("invalid filetype: " + page)
 	}

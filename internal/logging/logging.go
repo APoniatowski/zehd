@@ -5,7 +5,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
+
+	"zehd-frontend/internal/env"
 )
 
 func LogIt(logFunction string, logOutput string, message string) {
@@ -37,8 +40,22 @@ func Logger(logFunction string, logOutput string, message string) error {
 	} else {
 		return err
 	}
-  if logOutput != "INFO" {
-    fmt.Println("\t" + logFunction + " [ " + logOutput + " ] ==> " + message)
-  }
+	if logOutput != "INFO" {
+		fmt.Println("\t" + logFunction + " [ " + logOutput + " ] ==> " + message)
+	}
 	return nil
+}
+
+// TrackTime defer this function right at the beginning, to track time from start to finish
+func TrackTime(taskName string, pre time.Time) time.Duration {
+	elapsed := time.Since(pre)
+	profiler, err := strconv.ParseBool(env.EnvProfiler())
+	if err != nil {
+		fmt.Println(err)
+	}
+	if profiler {
+		fmt.Printf("%v ", taskName)
+		fmt.Println("elapsed:", elapsed)
+	}
+	return elapsed
 }

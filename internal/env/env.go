@@ -24,7 +24,6 @@ func EnvHostname() string {
 	} else {
 		return hostname
 	}
-
 }
 
 func EnvTemplateDir() string {
@@ -49,4 +48,12 @@ func EnvCacheRefresh() string {
 		timer = "60"
 	}
 	return timer
+}
+
+func EnvProfiler() string {
+	profiler := os.Getenv("PROFILER")
+	if len(profiler) == 0 {
+		profiler = "false"
+	}
+	return profiler
 }

@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"poniatowski-dev/internal"
-	"poniatowski-dev/internal/datacapturing"
-	"poniatowski-dev/internal/logging"
+	"zehd-frontend/internal"
+	"zehd-frontend/internal/datacapturing"
+	"zehd-frontend/internal/logging"
 	"strings"
 )
 

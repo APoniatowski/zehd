@@ -2,7 +2,7 @@ package internal
 
 import (
 	"net/http"
-	"poniatowski-dev/internal/env"
+	"zehd-frontend/internal/env"
 )
 
 // Common variables
