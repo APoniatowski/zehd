@@ -9,18 +9,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"zehd-frontend/internal/logging"
 	"sync"
 	"time"
-
-	"zehd-frontend/internal/logging"
 )
 
+// DatabaseExistsInfo Struct for checking if the DB exists
 type DatabaseExistsInfo struct {
 	Frontend   string `json:"frontend"`
 	Connection string `json:"connection"`
 	Tables     string `json:"tables"`
 }
 
+// RequestData Struct for checking and collecting user requests via headers
 type RequestData struct {
 	FrontendName string `json:"frontendName"`
 	TimeDate     int64  `json:"timeDate"`
@@ -36,7 +37,7 @@ type RequestData struct {
 	CFIPCountry  string `json:"CF-IPCountry"`
 }
 
-// DatabaseInit - Initialize the database with tables, if the check returns false
+// DatabaseInit Initialize the database with tables, if the check returns false
 func DatabaseInit() error {
 	defer logging.TrackTime("db-init", time.Now())
 	var databaseInfo DatabaseExistsInfo
@@ -68,7 +69,7 @@ func DatabaseInit() error {
 	return nil
 }
 
-// DatabaseExists - Check if database exists and has existing tables
+// DatabaseExists Check if database exists and has existing tables
 func (dbInfo *DatabaseExistsInfo) DatabaseExists() {
 	defer logging.TrackTime("db-exists", time.Now())
 	backendURL := os.Getenv("BACKEND")
@@ -119,7 +120,7 @@ func (dbInfo *DatabaseExistsInfo) DatabaseCreate() {
 	}()
 }
 
-// DBConnector  Function to insert request data into the database
+// DBConnector Function to insert request data into the database
 func (rD *RequestData) DBConnector(waitGroup *sync.WaitGroup) {
 	defer logging.TrackTime("db-connector", time.Now())
 	waitGroup.Add(1)

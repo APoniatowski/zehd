@@ -4,18 +4,17 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"zehd-frontend/internal/backendconnector"
+	"zehd-frontend/internal/logging"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	timeSmithy "github.com/aws/smithy-go/time"
-
-	"zehd-frontend/internal/backendconnector"
-	"zehd-frontend/internal/logging"
 )
 
-// CollectData - Collects all data from http request, parses it and sends it to the database
+// CollectData Collects all data from http request, parses it and sends it to the database
 func CollectData(r *http.Request) {
 	defer logging.TrackTime("data-collector", time.Now())
 	var rD backendconnector.RequestData

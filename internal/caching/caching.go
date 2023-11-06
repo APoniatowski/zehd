@@ -7,17 +7,18 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
-
 	"zehd-frontend/internal"
 	"zehd-frontend/internal/logging"
+	"strings"
+	"time"
 )
 
+// Pages Struct for caching templates and routes
 type Pages struct {
 	RouteMap map[string]*template.Template
 }
 
+// CachePages Method that walks the specified or default directories and caches the templates
 func (pages *Pages) CachePages() error {
 	defer logging.TrackTime("cacher", time.Now())
 	errchdir := os.Chdir(internal.TemplatesDir + internal.TemplateType)
@@ -49,7 +50,7 @@ func (pages *Pages) CachePages() error {
 			filetype = "invalid"
 		}
 		name := strings.TrimSuffix(croppedtemplatepath, filepath.Ext(path))
-		tmpl, err := templatebuilder(croppedtemplatepath, filetype)
+		tmpl, err := templateBuilder(croppedtemplatepath, filetype)
 		if err != nil {
 			return fmt.Errorf("failed to build template for file %q: %v", path, err)
 		}
@@ -63,7 +64,8 @@ func (pages *Pages) CachePages() error {
 	return nil
 }
 
-func templatebuilder(page, filetype string) (*template.Template, error) {
+// templateBuilder Private function for building templates, which is called by CachePages
+func templateBuilder(page, filetype string) (*template.Template, error) {
 	defer logging.TrackTime("template-builder", time.Now())
 	if filetype == "invalid" {
 		return nil, errors.New("invalid filetype: " + page)

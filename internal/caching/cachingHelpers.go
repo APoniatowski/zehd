@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"zehd-frontend/internal/logging"
 	"time"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/russross/blackfriday/v2"
-
-	"zehd-frontend/internal/logging"
 )
 
+// pageBuilder Private helper function that builds HTML/goHTML pages and returns the templates
 func pageBuilder(templatePath, layoutPath string) (*template.Template, error) {
 	defer logging.TrackTime("page-builder", time.Now())
 	templates := template.New("")
@@ -30,6 +30,7 @@ func pageBuilder(templatePath, layoutPath string) (*template.Template, error) {
 	return templates, nil
 }
 
+// convertOrgToTemplate Private helper function that builds org-mode pages and returns the templates
 func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error) {
 	defer logging.TrackTime("org-converter", time.Now())
 	templates := template.New("")
@@ -73,6 +74,7 @@ func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error
 	return templates, nil
 }
 
+// convertMarkdownToTemplate Private helper function that builds markdown pages and returns the templates
 func convertMarkdownToTemplate(markdownPath, layoutPath string) (*template.Template, error) {
 	defer logging.TrackTime("md-converter", time.Now())
 	templates := template.New("")

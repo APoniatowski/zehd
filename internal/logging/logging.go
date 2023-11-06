@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"zehd-frontend/internal/env"
 	"strconv"
 	"time"
-
-	"zehd-frontend/internal/env"
 )
 
+// LogIt Boilerplate funtion that calls Logger, to write/prints logs
 func LogIt(logFunction string, logOutput string, message string) {
 	errCloseLogger := Logger(logFunction, logOutput, message)
 	if errCloseLogger != nil {
@@ -18,6 +18,7 @@ func LogIt(logFunction string, logOutput string, message string) {
 	}
 }
 
+// Logger This function is called by Logit and prints/writes logs
 func Logger(logFunction string, logOutput string, message string) error {
 	currentDate := time.Now().Format("2006-01-02 15:04:05")
 	pathString := os.Getenv("HOME") + "/log/"

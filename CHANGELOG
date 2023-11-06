@@ -1,4 +1,4 @@
-## [1.1.1] - 29-10-2023
+## [1.1.2] - 2-11-2023
 ### Added
-- A profiler, with an env variable check, to output how long a task has taken for a number of tasks/functions.
-
+- Added documentation for existing functions/methods/structs
+- Dockerfile inclusion
