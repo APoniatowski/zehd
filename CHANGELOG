@@ -1,4 +1,4 @@
-## [1.1.2] - 2-11-2023
+## [1.2.0] - 13-11-2023
 ### Added
-- Added documentation for existing functions/methods/structs
-- Dockerfile inclusion
+- Created a distributor, for distributing to "bodyless" data. In other words, it will distribute the cached webpages to other frontends, where the other frontend will only have it in memory, but not written to disk.
+- Also did some cleanup/refactoring and moved types to their own go file

@@ -5,17 +5,17 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"zehd-frontend/pkg"
+	"zehd-frontend/pkg/backendconnector"
+	"zehd-frontend/pkg/caching"
+	"zehd-frontend/pkg/env"
+	"zehd-frontend/pkg/kubernetes"
 	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
 
-	"zehd-frontend/internal"
-	"zehd-frontend/internal/backendconnector"
-	"zehd-frontend/internal/caching"
-	"zehd-frontend/internal/env"
-	"zehd-frontend/internal/kubernetes"
-	"zehd-frontend/internal/logging"
+	"github.com/APoniatowski/boillog"
 
 	"github.com/joho/godotenv"
 )
@@ -39,7 +39,7 @@ func main() {
 			}
 			timer, err := strconv.Atoi(env.EnvCacheRefresh())
 			if err != nil {
-				logging.LogIt("EnvCacheRefresh", "ERROR", "error loading environment variables")
+				boillog.LogIt("EnvCacheRefresh", "ERROR", "error loading environment variables")
 			}
 			time.Sleep(time.Duration(timer) * time.Second)
 		}
@@ -47,26 +47,26 @@ func main() {
 	fmt.Println(" Done.")
 	// JS and CSS handling/serving
 	fmt.Printf(" Serving Static CSS/JS...")
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir(internal.TemplatesDir+"css"))))
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir(internal.TemplatesDir+"js"))))
-	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(internal.TemplatesDir+"images"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir(pkg.TemplatesDir+"css"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir(pkg.TemplatesDir+"js"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(pkg.TemplatesDir+"images"))))
 	fmt.Println(" Done.")
 	// Initialize the database and determine if collector should be enabled
 	fmt.Printf(" Initializing Database...")
 	errEnv := godotenv.Load("/usr/local/env/.env")
 	if errEnv != nil {
-		logging.LogIt("DatabaseExists", "ERROR", "error loading .env variables")
+		boillog.LogIt("DatabaseExists", "ERROR", "error loading .env variables")
 	}
-	internal.CollectionError = backendconnector.DatabaseInit()
-	if internal.CollectionError != nil {
-    log.Println(" Failed.")
-		logging.LogIt("Main", "WARNING", "Failed to initialize database, data will not be collected.")
+	pkg.CollectionError = backendconnector.DatabaseInit()
+	if pkg.CollectionError != nil {
+		log.Println(" Failed.")
+		boillog.LogIt("Main", "WARNING", "Failed to initialize database, data will not be collected.")
 	} else {
 		fmt.Println(" Done.")
 	}
 	// Page serving section
 	fmt.Printf(" Initializing Routes...")
-	http.HandleFunc("/favicon.ico", internal.FaviconHandler) // favicon
+	http.HandleFunc("/favicon.ico", pkg.FaviconHandler) // favicon
 	http.HandleFunc("/", cache.HandlerFunc)
 	fmt.Println(" Done.")
 	// Starting readiness probe
