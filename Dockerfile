@@ -4,8 +4,9 @@ ARG VERSION
 RUN apk add --no-cache git
 WORKDIR /go/src/app
 COPY . .
+RUN mkdir -p /go/bin/
 RUN go get -d -v ./...
-RUN go build -o /go/bin/app -v ./...
+RUN go build -o /go/bin/app -v ./cmd/zehd/main.go
 
 #final stage
 FROM alpine:latest
@@ -18,7 +19,8 @@ ENV TEMPLATEDIRECTORY=$TEMPLATEDIRECTORY
 ENV TEMPLATETYPE=$TEMPLATETYPE
 ENV REFRESHCACHE=$REFRESHCACHE
 ENV PROFILER=$PROFILER
+ARG VERSION
 ENTRYPOINT ["/app"]
-LABEL Name=zehd Version="$(cat VERSION)"
+LABEL Name=zehd Version=VERSION
 EXPOSE 80
 
