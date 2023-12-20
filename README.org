@@ -69,6 +69,11 @@ Adjust your frontend setup with environment variables (`PORT`,`TEMPLATEDIRECTORY
 - `REFRESHCACHE` : Specify a different refresh cycle (default is 60 seconds)
 - `PROFILER` : Specify `True` to enable the profiler to print the time it took to run a function. I will add additional funtionality to this,to be able to use it in templates
 
+** To try or run it on docker:
+#+NAME: docker
+#+BEGIN_SRC bash
+docker pull zehd/zehd:latest
+#+END_SRC
 
 Here is the [[https://github.com/APoniatowski/zehd-backend][backend service]], if you plan on collecting data on people visiting your site.
 

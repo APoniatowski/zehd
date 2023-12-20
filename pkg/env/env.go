@@ -54,12 +54,3 @@ func EnvCacheRefresh() string {
 	}
 	return timer
 }
-
-// EnvProfiler get the profiler switch from environment variables or return the default (false)
-func EnvProfiler() string {
-	profiler := os.Getenv("PROFILER")
-	if len(profiler) == 0 {
-		profiler = "false"
-	}
-	return profiler
-}

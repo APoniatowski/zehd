@@ -1,4 +1,4 @@
 ## [1.2.0] - 13-11-2023
 ### Added
-- Created a distributor, for distributing to "bodyless" data. In other words, it will distribute the cached webpages to other frontends, where the other frontend will only have it in memory, but not written to disk.
-- Also did some cleanup/refactoring and moved types to their own go file
+- I shelved the replicator for now, and decided to implement functions to template building, aptly named: func my template
+- for now its an empty funcmap, until I have a test function in my other repo, which will be open to additions
