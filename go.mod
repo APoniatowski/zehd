@@ -1,8 +1,6 @@
 module zehd-frontend
 
-go 1.21.3
-
-toolchain go1.21.4
+go 1.21.5
 
 require (
 	github.com/aws/smithy-go v1.12.1
@@ -15,4 +13,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 )
 
-require golang.org/x/exp v0.0.0-20231108232855-2478ac86f678 // indirect
+require (
+	github.com/APoniatowski/funcmytemplate v0.0.1 // indirect
+	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678 // indirect
+)

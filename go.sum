@@ -1,5 +1,7 @@
 github.com/APoniatowski/boillog v1.1.0 h1:jceyfIZCuGSn4e3Rlo0JOXK6C46Gce6MpITowkbeX1E=
 github.com/APoniatowski/boillog v1.1.0/go.mod h1:c7PpNRmlFv6tFVu9ogT/i1VwGsOeWRY8gRX14yHYpRQ=
+github.com/APoniatowski/funcmytemplate v0.0.1 h1:iuMga0N5U4umc28iucvy0oPFlW7JCyrT8l7Z9xMsvwU=
+github.com/APoniatowski/funcmytemplate v0.0.1/go.mod h1:d6IWMKOFbDyEPb46miTukA2c/4yHFahDC9wm5e/6EOE=
 github.com/aws/smithy-go v1.12.1 h1:yQRC55aXN/y1W10HgwHle01DRuV9Dpf31iGkotjt3Ag=
 github.com/aws/smithy-go v1.12.1/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

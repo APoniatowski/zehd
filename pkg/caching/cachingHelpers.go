@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/APoniatowski/boillog"
+	"github.com/APoniatowski/funcmytemplate"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/russross/blackfriday/v2"
@@ -15,13 +16,13 @@ import (
 // pageBuilder Private helper function that builds HTML/goHTML pages and returns the templates
 func pageBuilder(templatePath, layoutPath string) (*template.Template, error) {
 	defer boillog.TrackTime("page-builder", time.Now())
-	funcmytemplate := template.FuncMap{} // TODO: add funcmytemplate here later
+	funcmytemplates := funcmytemplate.Add()
 	templates := template.New("")
 	_, err := os.Stat(layoutPath)
 	if err != nil || !os.IsNotExist(err) {
-		templates, err = templates.Funcs(funcmytemplate).ParseFiles(templatePath)
+		templates, err = templates.Funcs(funcmytemplates).ParseFiles(templatePath)
 	} else {
-		templates, err = templates.Funcs(funcmytemplate).ParseFiles(layoutPath, templatePath)
+		templates, err = templates.Funcs(funcmytemplates).ParseFiles(layoutPath, templatePath)
 	}
 	if err != nil {
 		return nil, err
@@ -33,7 +34,7 @@ func pageBuilder(templatePath, layoutPath string) (*template.Template, error) {
 func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error) {
 	defer boillog.TrackTime("org-converter", time.Now())
 	var err error
-	funcmytemplate := template.FuncMap{} // TODO: add funcmytemplate here later
+	funcmytemplates := funcmytemplate.Add()
 	templates := template.New("")
 	_, notFoundErr := os.Stat(layoutPath)
 	if notFoundErr != nil {
@@ -44,7 +45,7 @@ func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error
 		htmlBytes := blackfriday.Run(orgBytes)
 		html := string(htmlBytes)
 		html = fmt.Sprintf(`{{define "org"}}%s{{end}}`, html)
-		templates, err = templates.Funcs(funcmytemplate).Parse(html)
+		templates, err = templates.Funcs(funcmytemplates).Parse(html)
 		if err != nil {
 			return nil, err
 		}
@@ -56,8 +57,8 @@ func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error
 		htmlBytes := blackfriday.Run(orgBytes)
 		html := string(htmlBytes)
 		html = fmt.Sprintf(`{{define "org"}}%s{{end}}`, html)
-		templates, err = templates.Funcs(funcmytemplate).ParseFiles(layoutPath)
-		templates, err = templates.Funcs(funcmytemplate).Parse(html)
+		templates, err = templates.Funcs(funcmytemplates).ParseFiles(layoutPath)
+		templates, err = templates.Funcs(funcmytemplates).Parse(html)
 	}
 	if err != nil {
 		return nil, err
@@ -69,7 +70,7 @@ func convertOrgToTemplate(orgPath, layoutPath string) (*template.Template, error
 func convertMarkdownToTemplate(markdownPath, layoutPath string) (*template.Template, error) {
 	defer boillog.TrackTime("md-converter", time.Now())
 	var err error
-	funcmytemplate := template.FuncMap{} // TODO: add funcmytemplate here later
+	funcmytemplates := funcmytemplate.Add()
 	templates := template.New("")
 	_, notFoundErr := os.Stat(layoutPath)
 	if notFoundErr != nil {
@@ -79,7 +80,7 @@ func convertMarkdownToTemplate(markdownPath, layoutPath string) (*template.Templ
 		}
 		html := string(markdown.ToHTML(markdownBytes, nil, nil))
 		html = fmt.Sprintf(`{{define "markdown"}}%s{{end}}`, html)
-		templates, err = templates.Funcs(funcmytemplate).Parse(html)
+		templates, err = templates.Funcs(funcmytemplates).Parse(html)
 		if err != nil {
 			return nil, err
 		}
@@ -90,8 +91,8 @@ func convertMarkdownToTemplate(markdownPath, layoutPath string) (*template.Templ
 		}
 		html := string(markdown.ToHTML(markdownBytes, nil, nil))
 		html = fmt.Sprintf(`{{define "markdown"}}%s{{end}}`, html)
-		templates, err = templates.Funcs(funcmytemplate).ParseFiles(layoutPath)
-		templates, err = templates.Funcs(funcmytemplate).Parse(html)
+		templates, err = templates.Funcs(funcmytemplates).ParseFiles(layoutPath)
+		templates, err = templates.Funcs(funcmytemplates).Parse(html)
 	}
 	if err != nil {
 		return nil, err
