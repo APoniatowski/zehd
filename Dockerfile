@@ -1,10 +1,11 @@
 #build stage
-FROM golang:alpine AS builder
+FROM golang:latest AS builder
 ARG VERSION
 RUN apk add --no-cache git
 WORKDIR /go/src/app
 COPY . .
 RUN mkdir -p /go/bin/
+RUN go mod tidy
 RUN go get -d -v ./...
 RUN go build -o /go/bin/app -v ./cmd/zehd/main.go
 

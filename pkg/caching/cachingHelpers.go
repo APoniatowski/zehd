@@ -17,9 +17,9 @@ import (
 func pageBuilder(templatePath, layoutPath string) (*template.Template, error) {
 	defer boillog.TrackTime("page-builder", time.Now())
 	funcmytemplates := funcmytemplate.Add()
-	templates := template.New("")
+	templates := template.New("layout")
 	_, err := os.Stat(layoutPath)
-	if err != nil || !os.IsNotExist(err) {
+	if err != nil {
 		templates, err = templates.Funcs(funcmytemplates).ParseFiles(templatePath)
 	} else {
 		templates, err = templates.Funcs(funcmytemplates).ParseFiles(layoutPath, templatePath)
