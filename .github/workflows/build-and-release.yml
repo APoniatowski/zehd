@@ -8,10 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.vars.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: '1.21'
           
@@ -20,48 +22,39 @@ jobs:
           cd cmd/zehd
           go build -o zehd ./...
           cd ../../
-          echo "VERSION=$(cat ./VERSION)" >> $GITHUB_ENV
-          echo "$(cat ./CHANGELOG)" > changelog.md
+          
+      - name: Set Version and Changelog
+        id: vars
+        run: |
+          echo "VERSION=$(cat ./VERSION)" >> $GITHUB_OUTPUT
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat ./CHANGELOG >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
           
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: zehd
           path: cmd/zehd/zehd
-          
-      - name: Upload Changelog
-        uses: actions/upload-artifact@v2
-        with:
-          name: changelog
-          path: changelog.md
-          
-      - name: Set Outputs
-        id: vars
-        run: echo "::set-output name=version::$(cat ./VERSION)"
           
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: zehd
-          
-      - name: Download Changelog
-        uses: actions/download-artifact@v2
-        with:
-          name: changelog
           
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts: 'zehd/zehd' 
+          artifacts: 'zehd'
           tag: v${{ needs.build.outputs.version }}
           name: ZEHD v${{ needs.build.outputs.version }}
-          body_path: changelog.md
+          body: ${{ needs.build.outputs.changelog }}
           allowUpdates: true
