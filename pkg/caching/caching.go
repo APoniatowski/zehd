@@ -1,15 +1,13 @@
 package caching
 
 import (
-	"errors"
 	"fmt"
-	"html/template"
 	"io/fs"
 	"os"
 	"path/filepath"
-	"zehd-frontend/pkg"
 	"strings"
 	"time"
+	"zehd/pkg"
 
 	"github.com/APoniatowski/boillog"
 )
@@ -17,6 +15,13 @@ import (
 // CachePages Method that walks the specified or default directories and caches the templates
 func (pages *Pages) CachePages() error {
 	defer boillog.TrackTime("cacher", time.Now())
+	if len(pkg.GitLink) != 0 {
+		err := Git("refresh")
+		if err != nil {
+			boillog.LogIt("CachePages", "ERROR", err.Error())
+		}
+	}
+
 	errchdir := os.Chdir(pkg.TemplatesDir + pkg.TemplateType)
 	if errchdir != nil {
 		boillog.LogIt("cachepages", "error", "chdir returned an error: "+fmt.Sprintln(errchdir))
@@ -42,6 +47,8 @@ func (pages *Pages) CachePages() error {
 			filetype = ".html"
 		case ".md":
 			filetype = ".md"
+		case ".org":
+			filetype = ".org"
 		default:
 			filetype = "invalid"
 		}
@@ -58,34 +65,4 @@ func (pages *Pages) CachePages() error {
 		return err
 	}
 	return nil
-}
-
-// templateBuilder Private function for building templates, which is called by CachePages
-func templateBuilder(page, filetype string) (*template.Template, error) {
-	defer boillog.TrackTime("template-builder", time.Now())
-	if filetype == "invalid" {
-		return nil, errors.New("invalid filetype: " + page)
-	}
-	layoutpage := pkg.TemplatesDir + "layout." + pkg.TemplateType
-	templatepage := pkg.TemplatesDir + pkg.TemplateType + "/" + page
-	_, notfounderr := os.Stat(templatepage)
-	if notfounderr != nil {
-		if os.IsNotExist(notfounderr) {
-			return nil, errors.New("template does not exist: " + page)
-		}
-	}
-	var parseerr error
-	var templates *template.Template
-	switch filetype {
-	case ".org":
-		templates, parseerr = convertOrgToTemplate(templatepage, layoutpage)
-	case ".md":
-		templates, parseerr = convertMarkdownToTemplate(templatepage, layoutpage)
-	default:
-		templates, parseerr = pageBuilder(templatepage, layoutpage)
-	}
-	if parseerr != nil {
-		return nil, errors.New("error parsing templates: " + fmt.Sprintln(parseerr))
-	}
-	return templates, nil
 }

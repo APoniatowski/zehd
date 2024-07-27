@@ -4,11 +4,11 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"zehd-frontend/pkg/backendconnector"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"zehd/pkg/backendconnector"
 
 	"github.com/APoniatowski/boillog"
 

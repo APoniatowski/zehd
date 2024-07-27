@@ -5,15 +5,15 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"zehd-frontend/pkg"
-	"zehd-frontend/pkg/backendconnector"
-	"zehd-frontend/pkg/caching"
-	"zehd-frontend/pkg/env"
-	"zehd-frontend/pkg/kubernetes"
 	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
+	"zehd/pkg"
+	"zehd/pkg/backendconnector"
+	"zehd/pkg/caching"
+	"zehd/pkg/env"
+	"zehd/pkg/kubernetes"
 
 	"github.com/APoniatowski/boillog"
 
@@ -27,6 +27,20 @@ func main() {
 	fmt.Printf(" Starting liveness probe...")
 	http.HandleFunc("/k8s/api/health", kubernetes.Healthz)
 	fmt.Println(" Done.")
+	// cloning repo from git source, if specified.
+	fmt.Println(" Checking git repo:")
+	fmt.Printf("  Cloning")
+	if len(pkg.GitLink) == 0 {
+		fmt.Printf("... Skipped.\n")
+	} else {
+		err := caching.Git("startup")
+		if err != nil {
+			fmt.Printf("\n")
+			log.Println(err.Error())
+		} else {
+			fmt.Println(" Done.")
+		}
+	}
 	// init caching via go func(){check files for changes and figure out a way to pass them to handler}
 	fmt.Printf(" Building and Caching templates...")
 	cache := &caching.Pages{}
@@ -37,7 +51,7 @@ func main() {
 			if err != nil {
 				log.Println(err.Error())
 			}
-			timer, err := strconv.Atoi(env.EnvCacheRefresh())
+			timer, err := strconv.Atoi(pkg.RefreshCache)
 			if err != nil {
 				boillog.LogIt("EnvCacheRefresh", "ERROR", "error loading environment variables")
 			}
@@ -46,11 +60,35 @@ func main() {
 	}()
 	fmt.Println(" Done.")
 	// JS and CSS handling/serving
-	fmt.Printf(" Serving Static CSS/JS...")
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir(pkg.TemplatesDir+"css"))))
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir(pkg.TemplatesDir+"js"))))
-	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(pkg.TemplatesDir+"images"))))
-	fmt.Println(" Done.")
+	fmt.Printf(" Serving Static paths:\n")
+	fmt.Printf("   CSS...")
+	if pkg.CSS != pkg.Disable {
+		http.Handle("/"+pkg.CSS+"/", http.StripPrefix("/"+pkg.CSS+"/", http.FileServer(http.Dir(pkg.TemplatesDir+pkg.CSS))))
+		fmt.Println(" Done.")
+	} else {
+		fmt.Println(" Disabled.")
+	}
+	fmt.Printf("   JS... ")
+	if pkg.Javascript != pkg.Disable {
+		http.Handle("/"+pkg.Javascript+"/", http.StripPrefix("/"+pkg.Javascript+"/", http.FileServer(http.Dir(pkg.TemplatesDir+pkg.Javascript))))
+		fmt.Println(" Done.")
+	} else {
+		fmt.Println(" Disabled.")
+	}
+	fmt.Printf("   Images... ")
+	if pkg.Images != pkg.Disable {
+		http.Handle("/"+pkg.Images+"/", http.StripPrefix("/"+pkg.Images+"/", http.FileServer(http.Dir(pkg.TemplatesDir+pkg.Images))))
+		fmt.Println(" Done.")
+	} else {
+		fmt.Println(" Disabled.")
+	}
+	fmt.Printf("   Downloads... ")
+	if pkg.Downloads != pkg.Disable {
+		http.Handle("/"+pkg.Downloads+"/", http.StripPrefix("/"+pkg.Downloads+"/", http.FileServer(http.Dir(pkg.TemplatesDir+pkg.Downloads))))
+		fmt.Println(" Done.")
+	} else {
+		fmt.Println(" Disabled.")
+	}
 	// Initialize the database and determine if collector should be enabled
 	fmt.Printf(" Initializing Database...")
 	errEnv := godotenv.Load("/usr/local/env/.env")

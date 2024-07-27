@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"zehd-frontend/pkg"
-	"zehd-frontend/pkg/datacapturing"
 	"strings"
+	"zehd/pkg"
+	"zehd/pkg/datacapturing"
 
 	"github.com/APoniatowski/boillog"
 )
@@ -57,10 +57,9 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html")
 	pageNotFound := false
-	if r.Method != "GET" {
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		boillog.LogIt("405", "ERROR", "user_ip ["+r.RemoteAddr+"] : Method not allowed")
-	} else {
+
+	switch r.Method {
+	case "GET":
 		templates, ok := pages.RouteMap[strings.Trim(r.URL.Path, "/")]
 		if r.URL.Path == "/" || r.URL.Path == "" {
 			templates = pages.RouteMap["welcome"]
@@ -85,5 +84,10 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			boillog.LogIt("500", "ERROR", "user_ip ["+r.RemoteAddr+"] : Issue sending 'layout'")
 		}
+	case "POST":
+		fmt.Println("Feature not implemented yet...")
+	default:
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		boillog.LogIt("405", "ERROR", "user_ip ["+r.RemoteAddr+"] : Method not allowed")
 	}
 }

@@ -1,6 +1,8 @@
 package caching
 
-import "html/template"
+import (
+	"html/template"
+)
 
 // Pages Struct for caching templates and routes
 type Pages struct {
