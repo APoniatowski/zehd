@@ -1,9 +1,4 @@
-## [1.5.0] - 13-11-2024
-### Added
-- Added git functionality, so that one does not have to upload, or automate updates to you website
-- It can either use a password or token (with the correct permissions, it is up to the user how open they want their token to be if it gets leaked)
-- Changed to scratch image for docker, it managed to reduce the size by another couple of MB
-- bumped the go version in the go.mod file
-- made the http handler use a switch for GET and POST, where I have an idea with POST
-- reworked how the env vars initialize and how it should visually display how much is configured to the user
-- added ability to disable static paths individually, as well as change them to custom paths (css, js, images and downloads)
+## [1.5.2] - 28-07-2024
+### Updated
+- made the config initialization more visual (orange for default and green for configured)
+- fixed a bug, where it only fetched the code and not merge it (ala pull), I renamed the private function from gitFetcher() to gitPull(), instead of creating a private pull function to be called in gitFetcher()

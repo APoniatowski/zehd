@@ -1,6 +1,7 @@
 package caching
 
 import (
+	"fmt"
 	"os"
 	"zehd/pkg"
 
@@ -35,31 +36,50 @@ func gitCloner() error {
 	return err
 }
 
-func gitFetcher() error {
+func gitPull() error {
 	r, err := git.PlainOpen(pkg.TemplatesDir)
 	if err != nil {
-		boillog.LogIt("gitFetcher", "ERROR", "Failed to open repository: "+err.Error())
+		boillog.LogIt("gitPull", "ERROR", "Failed to open repository: "+err.Error())
 		return err
 	}
-
-	fetchOptions := &git.FetchOptions{
-		RemoteName:      "origin",
-		InsecureSkipTLS: true, // This bypasses SSL certificate verification
+	w, err := r.Worktree()
+	if err != nil {
+		boillog.LogIt("gitPull", "ERROR", "Failed to get worktree: "+err.Error())
+		return err
 	}
-
+	pullOptions := &git.PullOptions{
+		RemoteName:      "origin",
+		InsecureSkipTLS: true,
+	}
 	if len(pkg.GitUsername) > 0 && len(pkg.GitToken) > 0 {
-		fetchOptions.Auth = &http.BasicAuth{
+		pullOptions.Auth = &http.BasicAuth{
 			Username: pkg.GitUsername,
 			Password: pkg.GitToken,
 		}
 	}
-
-	err = r.Fetch(fetchOptions)
-	if err != nil && err != git.NoErrAlreadyUpToDate {
-		boillog.LogIt("gitFetcher", "WARNING", "Failed to fetch updates: "+err.Error())
+	err = w.Pull(pullOptions)
+	if err != nil {
+		if err == git.NoErrAlreadyUpToDate {
+			ref, err := r.Head()
+			if err != nil {
+				boillog.LogIt("gitPull", "ERROR", "Failed to get HEAD reference: "+err.Error())
+				return err
+			}
+			commitHash := ref.Hash().String()
+			boillog.LogIt("gitPull", "INFO", fmt.Sprintf("Repository is already up-to-date at commit %s", commitHash))
+			return nil
+		}
+		boillog.LogIt("gitPull", "WARNING", "Failed to pull updates: "+err.Error())
 		return err
 	}
-	boillog.LogIt("gitFetcher", "INFO", "Repository updated successfully")
+	ref, err := r.Head()
+	if err != nil {
+		boillog.LogIt("gitPull", "ERROR", "Failed to get HEAD reference: "+err.Error())
+		return err
+	}
+	commitHash := ref.Hash().String()
+
+	boillog.LogIt("gitPull", "INFO", fmt.Sprintf("Repository updated successfully to commit %s", commitHash))
 	return nil
 }
 

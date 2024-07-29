@@ -24,7 +24,12 @@ var (
 const Disable = "unused-path" // TODO: might change this later
 
 func init() {
-	fmt.Print("Loading Configuration via Environment Variables...")
+	fmt.Println("Loading Configuration via Environment Variables.")
+	orange := "\033[48;5;208m" // Orange background
+	green := "\033[42m"        // Green background
+	reset := "\033[0m"         // Reset to default
+	orangeBlock := orange + "  " + reset
+	greenBlock := green + "  " + reset
 	config := []struct {
 		value    *string
 		getValue func() (string, int)
@@ -44,18 +49,26 @@ func init() {
 	score := 0
 	for _, c := range config {
 		*c.value, score = c.getValue()
+		switch score {
+		case 1:
+			fmt.Print(orangeBlock)
+		case 2:
+			fmt.Print(greenBlock)
+		}
 		configScoreTotal += score
 	}
+	fmt.Println("")
 	switch {
 	case configScoreTotal == 20:
-		fmt.Println(" Fully configured.")
-	case configScoreTotal > 12:
-		fmt.Println("Mostly configured, defaults set on some settings.")
-	case configScoreTotal > 6:
-		fmt.Println(" Partially configured, defaults set on some settings.")
-	default:
-		fmt.Println(" Using defaults.")
+		fmt.Println("      [--- Fully configured. ---]")
+	case configScoreTotal > 15:
+		fmt.Println("      [--- Mostly configured, defaults set on some settings. ---]")
+	case configScoreTotal > 10:
+		fmt.Println("      [--- Partially configured, defaults set on most settings. ---]")
+	case configScoreTotal == len(config):
+		fmt.Println("      [--- Using defaults. ---]")
 	}
+	fmt.Println("<======================================================================================>")
 }
 
 // Common functions

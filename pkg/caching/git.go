@@ -5,8 +5,6 @@ import (
 )
 
 func Git(action string) error {
-	fmt.Printf(".")
-	// do something
 	switch action {
 	case "startup":
 		err := gitCloner()
@@ -14,13 +12,12 @@ func Git(action string) error {
 			return err
 		}
 	case "refresh":
-		err := gitFetcher()
+		err := gitPull()
 		if err != nil {
 			return err
 		}
 	default:
 		return fmt.Errorf("unknown error encountered, possible buffer overflow")
 	}
-	fmt.Printf(".")
 	return nil
 }
