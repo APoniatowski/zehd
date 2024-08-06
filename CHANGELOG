@@ -1,4 +1,4 @@
-## [1.5.2] - 28-07-2024
-### Updated
-- made the config initialization more visual (orange for default and green for configured)
-- fixed a bug, where it only fetched the code and not merge it (ala pull), I renamed the private function from gitFetcher() to gitPull(), instead of creating a private pull function to be called in gitFetcher()
+## [1.5.4] - 05-08-2024
+### Update
+- added git dir check in gitClone, as the first output makes it look horrible
+- adding whitespace... for those who are "idiomatically" inclined and finds it hard to read

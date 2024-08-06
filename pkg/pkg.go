@@ -25,11 +25,14 @@ const Disable = "unused-path" // TODO: might change this later
 
 func init() {
 	fmt.Println("Loading Configuration via Environment Variables.")
+
 	orange := "\033[48;5;208m" // Orange background
 	green := "\033[42m"        // Green background
 	reset := "\033[0m"         // Reset to default
+
 	orangeBlock := orange + "  " + reset
 	greenBlock := green + "  " + reset
+
 	config := []struct {
 		value    *string
 		getValue func() (string, int)
@@ -45,8 +48,10 @@ func init() {
 		{&GitUsername, env.EnvGitUsername},
 		{&GitToken, env.EnvGitToken},
 	}
+
 	configScoreTotal := 0
 	score := 0
+
 	for _, c := range config {
 		*c.value, score = c.getValue()
 		switch score {
@@ -57,17 +62,23 @@ func init() {
 		}
 		configScoreTotal += score
 	}
+
 	fmt.Println("")
+
 	switch {
 	case configScoreTotal == 20:
 		fmt.Println("      [--- Fully configured. ---]")
+
 	case configScoreTotal > 15:
 		fmt.Println("      [--- Mostly configured, defaults set on some settings. ---]")
+
 	case configScoreTotal > 10:
 		fmt.Println("      [--- Partially configured, defaults set on most settings. ---]")
+
 	case configScoreTotal == len(config):
 		fmt.Println("      [--- Using defaults. ---]")
 	}
+
 	fmt.Println("<======================================================================================>")
 }
 

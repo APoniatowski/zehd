@@ -11,13 +11,16 @@ func Git(action string) error {
 		if err != nil {
 			return err
 		}
+
 	case "refresh":
 		err := gitPull()
 		if err != nil {
 			return err
 		}
+
 	default:
 		return fmt.Errorf("unknown error encountered, possible buffer overflow")
 	}
+
 	return nil
 }

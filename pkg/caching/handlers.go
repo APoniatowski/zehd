@@ -20,6 +20,7 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 	} else {
 		go datacapturing.CollectData(r)
 	}
+
 	// Handle command line curl/wget and give their IP address back.
 	if strings.Contains(r.Header.Get("User-Agent"), "curl") ||
 		strings.Contains(r.Header.Get("User-Agent"), "Wget") ||
@@ -30,9 +31,11 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 			_, ipErr := fmt.Fprintf(w, "userip: %q is not IP:port\n", r.RemoteAddr)
 			if ipErr != nil {
 				log.Println(ipErr)
+
 				return
 			}
 		}
+
 		userIP := net.ParseIP(ipAddress)
 		if userIP == nil {
 			_, err := fmt.Fprintf(w, "userip: %q is not IP:port", r.RemoteAddr)
@@ -40,12 +43,15 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			boillog.LogIt("handlerFunc", "ERROR", "user_ip: "+r.RemoteAddr+" is not IP:port")
+
 			return
 		}
+
 		_, errWrite := fmt.Fprintf(w, "Your IP is: %s\n", ipAddress)
 		if errWrite != nil {
 			log.Println(errWrite)
 		}
+
 		forward := r.Header.Get("X-FORWARDED-FOR")
 		if forward != "" {
 			_, errWrite := fmt.Fprintf(w, "Forwarded for: %s\n", forward)
@@ -53,9 +59,12 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 				log.Println(errWrite)
 			}
 		}
+
 		return
 	}
+
 	w.Header().Set("Content-Type", "text/html")
+
 	pageNotFound := false
 
 	switch r.Method {
@@ -63,29 +72,38 @@ func (pages *Pages) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 		templates, ok := pages.RouteMap[strings.Trim(r.URL.Path, "/")]
 		if r.URL.Path == "/" || r.URL.Path == "" {
 			templates = pages.RouteMap["welcome"]
+			if templates == nil {
+				templates = pages.RouteMap["index"]
+			}
 		} else {
 			if !ok {
 				if pages.RouteMap["404"] == nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					boillog.LogIt("500", "ERROR", " --> welcome."+pkg.TemplateType+" not found")
+
 					return
 				}
+
 				templates = pages.RouteMap["404"]
 				boillog.LogIt("404", "ERROR", "user_ip ["+r.RemoteAddr+"] : Page requested not found")
 				pageNotFound = true
 			}
 		}
+
 		if pageNotFound {
 			w.WriteHeader(http.StatusNotFound)
 		}
+
 		tmplErr := templates.ExecuteTemplate(w, "layout", nil)
 		if tmplErr != nil {
 			log.Println(tmplErr.Error())
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			boillog.LogIt("500", "ERROR", "user_ip ["+r.RemoteAddr+"] : Issue sending 'layout'")
 		}
+
 	case "POST":
 		fmt.Println("Feature not implemented yet...")
+
 	default:
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		boillog.LogIt("405", "ERROR", "user_ip ["+r.RemoteAddr+"] : Method not allowed")

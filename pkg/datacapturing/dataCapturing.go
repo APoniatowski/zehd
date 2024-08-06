@@ -18,6 +18,7 @@ import (
 // CollectData Collects all data from http request, parses it and sends it to the database
 func CollectData(r *http.Request) {
 	defer boillog.TrackTime("data-collector", time.Now())
+
 	var rD backendconnector.RequestData
 	var errHostname error
 	var waitGroup sync.WaitGroup
@@ -46,11 +47,13 @@ func CollectData(r *http.Request) {
 	if errHostname != nil {
 		boillog.LogIt("CollectData", "ERROR", "unable to get frontend hostname")
 	}
+
 	// do checks on data obtained
 	netIP := net.ParseIP(rD.IP)
 	if netIP == nil {
 		boillog.LogIt("CollectData", "WARNING", "remoteAddr ["+rD.IP+"] : no valid ip found")
 	}
+
 	splitIPs := strings.Split(rD.XForwardFor, ",")
 	for _, ip := range splitIPs {
 		netIPs := net.ParseIP(ip)
@@ -58,7 +61,9 @@ func CollectData(r *http.Request) {
 			boillog.LogIt("CollectData", "WARNING", "x-forward-for ["+ip+"] : no valid ip found")
 		}
 	}
+
 	// send data to database
 	go rD.DBConnector(&waitGroup)
+
 	waitGroup.Wait()
 }
