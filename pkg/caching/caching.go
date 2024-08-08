@@ -20,10 +20,7 @@ func (pages *Pages) CachePages() error {
 		err := Git("refresh")
 		if err != nil {
 			boillog.LogIt("CachePages", "ERROR", err.Error())
-			return err
 		}
-
-		return nil
 	}
 
 	errchdir := os.Chdir(pkg.TemplatesDir + pkg.TemplateType)

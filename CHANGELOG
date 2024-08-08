@@ -1,4 +1,3 @@
-## [1.5.4] - 05-08-2024
-### Update
-- added git dir check in gitClone, as the first output makes it look horrible
-- adding whitespace... for those who are "idiomatically" inclined and finds it hard to read
+## [1.5.5] - 08-08-2024
+### Bugfix
+- fixed the git caching issue, where it will not cache git pulled/cloned sites

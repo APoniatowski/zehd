@@ -36,6 +36,7 @@ Here's an example of a simple Go template:
 
 ```html
 <!-- layout.gohtml -->
+{{ define "layout" }}
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,6 +46,7 @@ Here's an example of a simple Go template:
         {{template "templatePart"}}
     </body>
 </html>
+{{ end }}
 
 <!-- pagename.gohtml -->
 {{define "title"}}
