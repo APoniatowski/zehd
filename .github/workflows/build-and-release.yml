@@ -89,5 +89,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ needs.build.outputs.version }}
+            ghcr.io/zehd/zehd:latest
+            ghcr.io/zehd/zehd:${{ needs.build.outputs.version }}
