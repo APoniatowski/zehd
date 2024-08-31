@@ -71,6 +71,9 @@ ZEHD can be easily configured using environment variables. Here's a comprehensiv
 ```bash
 BACKEND="http://YourBackend.example.com:8080"
 HOSTNAME="ZEHD"
+LOGLOCATION="/var/log/app/"
+LOGLEVEL="DEBUG"
+APP_NAME="your-app"
 TEMPLATEDIRECTORY="/var/zehd/templates"
 TEMPLATETYPE="gohtml"
 REFRESHCACHE="60"
@@ -107,7 +110,7 @@ docker run -d --name zehd \
   -e GITLINK=https://github.com/your-username/your-repo.git \
   -e GITUSERNAME=your-username \
   -e GITTOKEN=your-token \
-  -p 8080:8080 \
+  -p 80:80 \
   zehd/zehd:latest
 ```
 
@@ -132,7 +135,7 @@ To get started with ZEHD:
 2. Set up your environment variables as described above
 3. If using Git integration, ensure your content repository is set up and accessible
 4. Run ZEHD
-5. Access your site through the configured port (default: 8080)
+5. Access your site through the configured port (default: 80)
 
 For more detailed instructions, please refer to the documentation (link to be added).
 
@@ -143,3 +146,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 [https://github.com/APoniatowski/zehd/blob/main/LICENSE]
+
+
+
+
+## Benchmark Results
+| Package | Test | Runs | ns/op | B/op | allocs/op |
+| --- | --- | --- | --- | --- | --- |
+| zehd/pkg/caching | BenchmarkCachePages | 8460 | 145314 | 10734 | 97 |
+| zehd/pkg/caching | BenchmarkTemplateBuilder | 8739 | 146341 | 17671 | 115 |

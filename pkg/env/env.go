@@ -21,13 +21,17 @@ func EnvPort() string {
 
 // EnvHostname get the hostname from environment variables or return the default (the hostname of the server)
 func EnvHostname() string {
+	if hostname := os.Getenv("NEWHOSTNAME"); hostname != "" {
+		return hostname
+	}
+
 	hostname, err := os.Hostname()
 	if err != nil {
 		log.Println(err.Error())
-		return os.Getenv("HOSTNAME")
-	} else {
-		return hostname
+		return ""
 	}
+
+	return hostname
 }
 
 // EnvCacheRefresh get the cache refresh from environment variables or return the default (60)

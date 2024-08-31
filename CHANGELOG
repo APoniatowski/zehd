@@ -1,3 +1,7 @@
-## [1.5.5] - 08-08-2024
-### Bugfix
-- fixed the git caching issue, where it will not cache git pulled/cloned sites
+## [1.5.6] - 31-08-2024
+### Update
+- Bumped log version in go.mod, added log level feature, as logs can grow quite large
+- Added some tests for caching and initial configuration
+- Found discreet and harmless bugs in testing arround hostnames for logging and other features
+- Added benchmarks for caching
+- Created readme updater for parsing the benchmarks and adding it to the readme

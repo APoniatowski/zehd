@@ -161,11 +161,8 @@ func templateBuilder(page, filetype string) (*template.Template, error) {
 
 	templatepage := pkg.TemplatesDir + pkg.TemplateType + "/" + page
 
-	_, notfounderr := os.Stat(templatepage)
-	if notfounderr != nil {
-		if os.IsNotExist(notfounderr) {
-			return nil, errors.New("template does not exist: " + page)
-		}
+	if _, err := os.Stat(templatepage); os.IsNotExist(err) {
+		return nil, errors.New("template does not exist: " + page)
 	}
 
 	var parseerr error
